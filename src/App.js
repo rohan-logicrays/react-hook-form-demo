@@ -1,23 +1,27 @@
-import logo from './logo.svg';
+
+import { useEffect, useState } from 'react';
 import './App.css';
+import ShowData from './Components/ShowData';
+import YouTubeForm from './Components/YouTubeForm';
+import axios from 'axios';
+import { ExportToExcel } from './Components/ExportToExcel';
 
 function App() {
+  const [data, setData] = useState([]);
+  const getData = async () => {
+    await axios
+      .get("http://localhost:3000/users")
+      .then((response) => setData(response.data))
+      .catch((err) => console.log(err));
+  };
+  useEffect(() => {
+    getData();
+  }, []);
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <ShowData data={data} getData={getData}/>
+      {/* <ExportToExcel apiData={data} fileName={"user_data"} /> */}
+     <YouTubeForm getData={getData} />
     </div>
   );
 }
